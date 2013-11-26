@@ -1,6 +1,6 @@
 var rfb = require('rfb2'),
   socketio = require('socket.io').listen(8091, { log: false }),
-  Png = require('./node_modules/node-png/build/Release/png').Png,
+  Png = require('./node_modules/png/build/Release/png').Png,
   connect = require('connect'),
   clients = [];
 
