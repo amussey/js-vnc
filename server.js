@@ -1,8 +1,20 @@
+var logging = false;
+process.argv.forEach(function (val, index, array) {
+  if (val == "-v" || val == "--verbose") {
+    logging = true;
+  }
+});
+
 var rfb = require('rfb2'),
-  socketio = require('socket.io').listen(8091, { log: false }),
+  socketio = require('socket.io').listen(8091, { log: logging }),
+  logger = socketio.log,
   Png = require('./node_modules/png/build/Release/png').Png,
   connect = require('connect'),
   clients = [];
+
+if (logging) {
+  logger.info("socket.io listening for client interactions on port 8091.");
+}
 
 function createRfbConnection(config, socket) {
   var r = rfb.createConnection({
@@ -62,7 +74,9 @@ function disconnectClient(socket) {
 }
 
 connect.createServer(connect.static('./static')).listen(8090);
-
+if (logging) {
+  logger.info("socket.io now serving ./static on port 8090.");
+}
 socketio.sockets.on('connection', function (socket) {
   socket.on('init', function (config) {
     var r = createRfbConnection(config, socket);
@@ -74,6 +88,9 @@ socketio.sockets.on('connection', function (socket) {
     });
     socket.on('disconnect', function () {
       disconnectClient(socket);
+    });
+    socket.on('error', function() {
+      console.log("Socket error!");
     });
   });
 });

@@ -1,4 +1,4 @@
-js-vnc-demo-project
+js-vnc
 ===================
 
 Demo project for the course Advanced JavaScript at FMI
